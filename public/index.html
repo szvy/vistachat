@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vistachat</title>
+  <link rel="icon" type="image/png" href="vistachat.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="chat-container">
+    <h1>vistachat</h1>
+    <p1>a site by <a href="https://szvy.win">szvy</a></p1>
+
+    <div id="user-form">
+      <input id="username" placeholder="enter your username" />
+      <input type="file" id="profilePic" accept="image/*" />
+      <button id="joinBtn">join chat</button>
+      <div id="username-rejected" class="rejected-message" style="display: none;">your message isnt appropriate, please be nicer :c</div>
+    </div>
+
+    <ul id="messages"></ul>
+    <form id="form" action="">
+      <input id="input" autocomplete="off" placeholder="type your message!!" />
+      <button id="sendBtn">send</button>
+      <div id="message-rejected" class="rejected-message" style="display: none;">your message isnt appropriate, please be nicer :c</div>
+    </form>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    const userForm = document.getElementById('user-form');
+    const usernameInput = document.getElementById('username');
+    const profilePicInput = document.getElementById('profilePic');
+    const form = document.getElementById('form');
+    const input = document.getElementById('input');
+    const messages = document.getElementById('messages');
+    const usernameRejectedMsg = document.getElementById('username-rejected');
+    const messageRejectedMsg = document.getElementById('message-rejected');
+
+    let userData = {};
+    document.getElementById('joinBtn').addEventListener('click', () => {
+      const username = usernameInput.value;
+      const profilePicFile = profilePicInput.files[0];
+
+      if (username && profilePicFile) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          userData.username = username;
+          userData.profilePic = event.target.result;
+          userForm.style.display = 'none';
+          form.style.display = 'flex';
+          messages.style.display = 'block';
+          socket.emit('user joined', username);
+        };
+        reader.readAsDataURL(profilePicFile);
+      } else {
+        alert('please enter a username and upload a profile picture!!');
+      }
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (input.value) {
+        const messageData = {
+          username: userData.username,
+          profilePic: userData.profilePic,
+          message: input.value,
+          type: 'user'
+        };
+        socket.emit('chat message', messageData);
+        input.value = '';
+      }
+    });
+
+    socket.on('chat message', (data) => {
+      const li = document.createElement('li');
+      li.classList.add('message');
+      if (data.type === 'system') {
+        li.classList.add('system-message');
+        li.textContent = data.message;
+      } else {
+        li.innerHTML = `
+          <img src="${data.profilePic}" alt="Profile Picture" />
+          <div class="message-content">
+            <span class="message-username">${data.username}</span>
+            <span>${data.message}</span>
+          </div>
+        `;
+      }
+
+      messages.appendChild(li);
+      messages.scrollTop = messages.scrollHeight;
+    });
+
+    socket.on('previous messages', (chatHistory) => {
+      chatHistory.forEach((data) => {
+        const li = document.createElement('li');
+        li.classList.add('message');
+        if (data.type === 'system') {
+          li.classList.add('system-message');
+          li.textContent = data.message;
+        } else {
+          li.innerHTML = `
+            <img src="${data.profilePic}" alt="Profile Picture" />
+            <div class="message-content">
+              <span class="message-username">${data.username}</span>
+              <span>${data.message}</span>
+            </div>
+          `;
+        }
+        messages.appendChild(li);
+      });
+      messages.scrollTop = messages.scrollHeight;
+    });
+
+    socket.on('username rejected', () => {
+      usernameRejectedMsg.style.display = 'block';
+      setTimeout(() => {
+        usernameRejectedMsg.style.display = 'none';
+      }, 3000);
+    });
+
+    socket.on('message rejected', () => {
+      messageRejectedMsg.style.display = 'block';
+      setTimeout(() => {
+        messageRejectedMsg.style.display = 'none';
+      }, 3000);
+    });
+  </script>
+</body>
+</html>
