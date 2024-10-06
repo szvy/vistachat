@@ -1,21 +1,19 @@
 ![Vistachat](public/vistachat.png)
 
-# Vistachat
-
-Vistachat is a chatroom website designed with a nostalgic theme inspired by the classic look and feel of Windows Vista—one of the most beloved versions of Windows.
+Vistachat is a chatroom website, with the design heavily inspired by Windows Vista, literally the best windows version ever
 
 ## Features
 
-- **Nostalgic Design**: Experience a chatroom that brings back the aesthetics of Windows Vista.
-- **Real-Time Communication**: Enjoy seamless chat functionality powered by Socket.IO.
+- **Real-Time Talking**: Be able to talk in live time, powered by Socket.io.
+- uhh
 
 ## Getting Started
 
-To set up your own instance of Vistachat, follow these steps:
+To set up your own copy of Vistachat, follow these steps:
 
-1. **Fork the Repository**: Click the "Fork" button on this repository to create a copy in your own GitHub account.
+1. **Fork the Repository**: Click the "Fork" button on this repository.
    
-2. **Host the Application**: Choose a hosting service that supports Node.js. You can also use one of the deployment buttons below for easy setup.
+2. **Host the Application**: Choose a hosting service that supports Node.js, or just click one of the buttons below
    
 3. **Configure Build Settings**:
    - Set the output directory to `/public`.
@@ -24,19 +22,17 @@ To set up your own instance of Vistachat, follow these steps:
      node index.js
      ```
 
-4. **Run the Application**: Start your server and access your chatroom!
-
-Once you've completed these steps, you're all set to use Vistachat!
+After doing these steps, you're all ready to use vistachat! :D
 
 ## Credits
 
-- **Developer**: Szvy - Created this project with love and nostalgia.
+- **Developer**: [Szvy](https://szvy.win/) - really cool developer that made this.
 - **Libraries Used**: 
-  - [Socket.IO](https://socket.io/) - A fantastic Node.js library that enables real-time, bidirectional communication.
+  - [Socket.IO](https://socket.io/) - really cool nodejs library that lets you have live time chatting.
 
 ## Contributing
 
-If you'd like to contribute to Vistachat, feel free to submit a pull request or open an issue. Your contributions are welcome!
+If you want to contribute, just make a pull request.
 
 ## License
 
