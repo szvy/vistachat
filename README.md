@@ -13,7 +13,7 @@ To set up your own copy of Vistachat, follow these steps:
 
 1. **Fork the Repository**: Click the "Fork" button on this repository.
    
-2. **Host the Application**: Choose a hosting service that supports Node.js, or just click one of the buttons below
+2. **Host the Application**: Choose a hosting service that supports Node.js, one i'd reccomend is [Render](https://render.com)
    
 3. **Configure Build Settings**:
    - Set the output directory to `/public`.
