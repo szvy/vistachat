@@ -17,6 +17,10 @@ To set up your own copy of Vistachat, follow these steps:
    
 3. **Configure Build Settings**:
    - Set the output directory to `/public`.
+   - - Set the build command to:
+     ```
+     node index.js
+     ```
    - Set the build command to:
      ```
      node index.js
