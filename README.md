@@ -1,4 +1,4 @@
-![Vistachat](public/vistachat.png)
+<img src="public/vistachat.png" alt="Vistachat" width="300"/>
 
 Vistachat is a chatroom website, with the design heavily inspired by Windows Vista, literally the best windows version ever
 
