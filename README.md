@@ -21,10 +21,6 @@ To set up your own copy of Vistachat, follow these steps:
      ```
      node index.js
      ```
-   - Set the build command to:
-     ```
-     node index.js
-     ```
 
 After doing these steps, you're all ready to use vistachat! :D
 
