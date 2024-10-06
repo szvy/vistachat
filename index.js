@@ -13,11 +13,11 @@ let users = {};
 const swearWords = [
   "anal", "anus", "arse", "ass", "asshole", "ballsack", "bastard", "biatch", "bitch", "blowjob", 
   "bollock", "boner", "boob", "boobs", "buttplug", "clitoris", "cock", "cum", "cunt", "dick", 
-  "dildo", "dyke", "erection", "fag", "faggot", "feck", "fellate", "fellatio", "felching", "fuck", 
-  "fudgepacker", "genitals", "jerk", "jizz", "knobend", "labia", "masturbate", "muff", 
-  "nigger", "nigga", "penis", "piss", "poop", "pube", "pussy", "scrotum", "sex", "shit", "sh1t", 
-  "slut", "smegma", "spunk", "tit", "tits", "titty", "tranny", "trannies", "tosser", "turd", "twat", 
-  "vagina", "wank", "whore", "asshat", "fvck", "pu55y", "pen1s" // don't worry, i used ai to generate these, i did NOT type any of these.
+  "dildo", "erection", "feck", "fellate", "fellatio", "felching", "fuck", 
+  "genitals", "jerk", "jizz", "masturbate", "muff", 
+  "penis", "piss", "poop", "pube", "pussy", "scrotum", "sex", "shit", "sh1t", 
+  "slut", "tit", "tits", "titty", "turd", "twat", 
+  "vagina", "wank", "whore", "asshat", "fvck", "pu55y", "pen1s"
 ];
 
 function containsSwearWord(str) {
