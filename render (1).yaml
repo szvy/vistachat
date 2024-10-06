@@ -1,0 +1,12 @@
+# Exported from Render on 2024-10-06T23:08:18Z
+services:
+- type: web
+  name: vistachat
+  runtime: node
+  repo: https://github.com/szvy/vistachat
+  plan: free
+  region: oregon
+  buildCommand: node index.js
+  startCommand: npm install
+  rootDir: .
+version: "1"
