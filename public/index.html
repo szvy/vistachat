@@ -82,13 +82,31 @@
         li.classList.add('system-message');
         li.textContent = data.message;
       } else {
-        li.innerHTML = `
-          <img src="${data.profilePic}" alt="Profile Picture" />
-          <div class="message-content">
-            <span class="message-username">${data.username}</span>
-            <span>${data.message}</span>
-          </div>
-        `;
+        // li.innerHTML = `
+        //   <img src="${data.profilePic}" alt="Profile Picture" />
+        //   <div class="message-content">
+        //     <span class="message-username">${data.username}</span>
+        //     <span>${data.message}</span>
+        //   </div>
+        // `;
+        let img = document.createElement("img");
+        img.src = data.profilePic;
+        img.alt = "Profile Picture";
+
+        let message = document.createElement("div");
+        message.classList.add("message-content")
+
+        let username = document.createElement("span");
+        username.classList.add("message-username");
+        username.innerText = data.username;
+
+        let msg = document.createElement("span");
+        msg.innerText = data.message;
+
+        li.appendChild(img);
+        li.appendChild(message)
+        message.appendChild(username);
+        message.appendChild(msg);
       }
 
       messages.appendChild(li);
@@ -103,13 +121,31 @@
           li.classList.add('system-message');
           li.textContent = data.message;
         } else {
-          li.innerHTML = `
-            <img src="${data.profilePic}" alt="Profile Picture" />
-            <div class="message-content">
-              <span class="message-username">${data.username}</span>
-              <span>${data.message}</span>
-            </div>
-          `;
+          // li.innerHTML = `
+          //   <img src="${data.profilePic}" alt="Profile Picture" />
+          //   <div class="message-content">
+          //     <span class="message-username">${data.username}</span>
+          //     <span>${data.message}</span>
+          //   </div>
+          // `;
+          let img = document.createElement("img");
+          img.src = data.profilePic;
+          img.alt = "Profile Picture";
+
+          let message = document.createElement("div");
+          message.classList.add("message-content")
+
+          let username = document.createElement("span");
+          username.classList.add("message-username");
+          username.innerText = data.username;
+
+          let msg = document.createElement("span");
+          msg.innerText = data.message;
+
+          li.appendChild(img);
+          li.appendChild(message)
+          message.appendChild(username);
+          message.appendChild(msg);
         }
         messages.appendChild(li);
       });
