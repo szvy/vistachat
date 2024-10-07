@@ -11,31 +11,28 @@ let chatHistory = [];
 let users = {};
 let lastMessageTime = {};
 
-const swearWords = [
-  "anal", "anus", "arse", "ass", "asshole", "ballsack", "bastard", "biatch", "bitch", "blowjob", 
-  "bollock", "boner", "boob", "boobs", "buttplug", "clitoris", "cock", "cum", "cunt", "dick", 
-  "dildo", "erection", "feck", "fellate", "fellatio", "felching", "fuck", 
-  "genitals", "jerk", "jizz", "masturbate", "muff", 
-  "penis", "piss", "poop", "pube", "pussy", "scrotum", "sex", "shit", "sh1t", 
-  "slut", "tit", "tits", "titty", "turd", "twat", 
-  "vagina", "wank", "whore", "asshat", "fvck", "pu55y", "pen1s"
-];
 
-function isUsernameValid(username) {
+async function isUsernameValid(username) {
   const usernameRegex = /^[a-zA-Z0-9._-]+$/;
   return username.length <= 16 && usernameRegex.test(username) && !containsSwearWord(username);
 }
 
-function containsSwearWord(message) {
-  return swearWords.some(word => message.toLowerCase().includes(word));
+async function containsSwearWord(message) {
+  // return swearWords.some(word => message.toLowerCase().includes(word));
+  let result = (await (await fetch('https://vector.profanity.dev', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: message }),
+  })).json());
+  return result.isProfanity;
 }
 
 io.on('connection', (socket) => {
   console.log('A user connected');
   socket.emit('previous messages', chatHistory);
 
-  socket.on('user joined', (username) => {
-    if (!isUsernameValid(username)) {
+  socket.on('user joined', async (username) => {
+    if (await !isUsernameValid(username)) {
       socket.emit('username rejected');
       return;
     }
@@ -46,7 +43,7 @@ io.on('connection', (socket) => {
     io.emit('chat message', joinMessage);
   });
 
-  socket.on('chat message', (data) => {
+  socket.on('chat message', async (data) => {
     const currentTime = Date.now();
     const cooldownTime = 3000;
 
@@ -56,7 +53,7 @@ io.on('connection', (socket) => {
       return;
     }
 
-    if (containsSwearWord(data.message)) {
+    if (await containsSwearWord(data.message)) {
       socket.emit('message rejected');
       return;
     }
