@@ -61,6 +61,14 @@ io.on('connection', (socket) => {
       return;
     }
 
+    if(users[socket.id] != data.username) {
+      socket.emit('message rejected', { message: `Usernames aren't the same.` });
+      return;
+    } 
+    if(data.type != "user") {
+      socket.emit('message rejected', { message: `Send messages as user, not anything else silly!` });
+      return;
+    }
     chatHistory.push(data);
     io.emit('chat message', data);
     lastMessageTime[socket.id] = currentTime;
