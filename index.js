@@ -66,6 +66,9 @@ io.on('connection', (socket) => {
       socket.emit('message rejected', { message: `Send messages as user, not anything else silly!` });
       return;
     }
+    if(!data.profilePic.startsWith("data:")) {
+      socket.emit('message rejected', { message: `Images must be data URIs.` });
+    }
     chatHistory.push(data);
     io.emit('chat message', data);
     lastMessageTime[socket.id] = currentTime;
