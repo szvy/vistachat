@@ -27,6 +27,7 @@ After doing these steps, you're all ready to use vistachat! :D
 ## Credits
 
 - **Developer**: [Szvy](https://szvy.win/) - really cool developer that made this.
+- **Developer**: [Sky](https://skys.day) - helped out a lot with patching xss.
 - **Libraries Used**: 
   - [Socket.IO](https://socket.io/) - really cool nodejs library that lets you have live time chatting.
 
