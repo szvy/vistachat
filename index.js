@@ -9,6 +9,7 @@ const io = new Server(server);
 app.use(express.static('public'));
 let chatHistory = [];
 let users = {};
+let lastMessageTime = {};
 
 const swearWords = [
   "anal", "anus", "arse", "ass", "asshole", "ballsack", "bastard", "biatch", "bitch", "blowjob", 
@@ -20,18 +21,19 @@ const swearWords = [
   "vagina", "wank", "whore", "asshat", "fvck", "pu55y", "pen1s"
 ];
 
-function containsSwearWord(str) {
-  const lowerStr = str.toLowerCase();
-  return swearWords.some(word => lowerStr.includes(word));
+function isUsernameValid(username) {
+  const usernameRegex = /^[a-zA-Z0-9._-]+$/;
+  return username.length <= 16 && usernameRegex.test(username) && !containsSwearWord(username);
 }
 
-function isUsernameValid(username) {
-  return !containsSwearWord(username);
+function containsSwearWord(message) {
+  return swearWords.some(word => message.toLowerCase().includes(word));
 }
 
 io.on('connection', (socket) => {
   console.log('A user connected');
   socket.emit('previous messages', chatHistory);
+
   socket.on('user joined', (username) => {
     if (!isUsernameValid(username)) {
       socket.emit('username rejected');
@@ -39,10 +41,21 @@ io.on('connection', (socket) => {
     }
 
     users[socket.id] = username;
+    lastMessageTime[socket.id] = 0;
     const joinMessage = { username: "System", message: `${username} has joined the chat`, type: "system" };
     io.emit('chat message', joinMessage);
   });
+
   socket.on('chat message', (data) => {
+    const currentTime = Date.now();
+    const cooldownTime = 3000;
+
+    if (currentTime - lastMessageTime[socket.id] < cooldownTime) {
+      const remainingTime = Math.ceil((cooldownTime - (currentTime - lastMessageTime[socket.id])) / 1000);
+      socket.emit('message rejected', { message: `Please wait ${remainingTime} seconds before sending another message!` });
+      return;
+    }
+
     if (containsSwearWord(data.message)) {
       socket.emit('message rejected');
       return;
@@ -50,6 +63,7 @@ io.on('connection', (socket) => {
 
     chatHistory.push(data);
     io.emit('chat message', data);
+    lastMessageTime[socket.id] = currentTime;
   });
 
   socket.on('disconnect', () => {
@@ -58,6 +72,7 @@ io.on('connection', (socket) => {
       const leaveMessage = { username: "System", message: `${username} has left the chat`, type: "system" };
       io.emit('chat message', leaveMessage);
       delete users[socket.id];
+      delete lastMessageTime[socket.id];
     }
   });
 });

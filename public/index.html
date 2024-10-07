@@ -13,7 +13,7 @@
     <p1>an <a href="https://github.com/szvy/vistachat">open-source</a> site by <a href="https://szvy.win">szvy</a></p1>
 
     <div id="user-form">
-      <input id="username" placeholder="enter your username" />
+      <input id="username" placeholder="enter your username" maxlength="16" />
       <input type="file" id="profilePic" accept="image/*" />
       <button id="joinBtn">join chat</button>
       <div id="username-rejected" class="rejected-message" style="display: none;">your message isnt appropriate, please be nicer :c</div>
@@ -45,6 +45,13 @@
       const username = usernameInput.value;
       const profilePicFile = profilePicInput.files[0];
 
+      const usernameRegex = /^[a-zA-Z0-9._-]{1,16}$/;
+
+    if (!usernameRegex.test(username)) {
+      alert('usernames can only have letters, numbers, dashes, periods, underscores, and must be under 16 characters :c');
+      return;
+    }
+
       if (username && profilePicFile) {
         const reader = new FileReader();
         reader.onload = function(event) {
@@ -61,19 +68,39 @@
       }
     });
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (input.value) {
-        const messageData = {
-          username: userData.username,
-          profilePic: userData.profilePic,
-          message: input.value,
-          type: 'user'
-        };
-        socket.emit('chat message', messageData);
-        input.value = '';
-      }
-    });
+    let lastMessageTime = 0;
+const cooldownTime = 3000;
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const currentTime = Date.now();
+  if (currentTime - lastMessageTime < cooldownTime) {
+    const remainingTime = Math.ceil((cooldownTime - (currentTime - lastMessageTime)) / 1000);
+    alert(`please wait ${remainingTime} seconds before you send another message!`);
+    return;
+  }
+
+  if (input.value) {
+    const messageData = {
+      username: userData.username,
+      profilePic: userData.profilePic,
+      message: input.value,
+      type: 'user'
+    };
+
+    socket.emit('chat message', messageData);
+    input.value = '';
+    lastMessageTime = currentTime;
+
+    sendBtn.disabled = true;
+    setTimeout(() => {
+      sendBtn.disabled = false;
+    }, cooldownTime);
+  }
+});
+
+
 
     socket.on('chat message', (data) => {
       const li = document.createElement('li');
@@ -152,19 +179,15 @@
       messages.scrollTop = messages.scrollHeight;
     });
 
-    socket.on('username rejected', () => {
-      usernameRejectedMsg.style.display = 'block';
-      setTimeout(() => {
-        usernameRejectedMsg.style.display = 'none';
-      }, 3000);
-    });
+  socket.on('username rejected', () => {
+    alert('your username is inappropriate, please choose a nicer one :c');
+  });
 
-    socket.on('message rejected', () => {
-      messageRejectedMsg.style.display = 'block';
-      setTimeout(() => {
-        messageRejectedMsg.style.display = 'none';
-      }, 3000);
-    });
+  socket.on('message rejected', () => {
+    alert('your message isn\'t appropriate, please be nicer :c');
+  });
+
   </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"8ce9ddc56d0ea213","serverTiming":{"name":{"cfExtPri":true,"cfL4":true}},"version":"2024.8.0","token":"bb2b860569ca44c0b7016740aec5a17e"}' crossorigin="anonymous"></script>
 </body>
 </html>
