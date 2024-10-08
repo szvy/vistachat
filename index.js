@@ -44,7 +44,7 @@ io.on('connection', (socket) => {
     }
 
 
-    if(users[socket.id] != data.username && await isUsernameValid(data.username)) {
+    if(users[socket.id] != data.username) {
       socket.emit('message rejected', { message: `Usernames aren't the same.` });
       return;
     } 
