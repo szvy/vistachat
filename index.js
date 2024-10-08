@@ -14,17 +14,7 @@ let lastMessageTime = {};
 
 async function isUsernameValid(username) {
   const usernameRegex = /^[a-zA-Z0-9._-]+$/;
-  return username.length <= 16 && usernameRegex.test(username) && !containsSwearWord(username);
-}
-
-async function containsSwearWord(message) {
-  // return swearWords.some(word => message.toLowerCase().includes(word));
-  let result = (await (await fetch('https://vector.profanity.dev', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: message }),
-  })).json());
-  return result.isProfanity;
+  return username.length <= 16 && usernameRegex.test(username);
 }
 
 io.on('connection', (socket) => {
@@ -53,12 +43,8 @@ io.on('connection', (socket) => {
       return;
     }
 
-    if (await containsSwearWord(data.message)) {
-      socket.emit('message rejected');
-      return;
-    }
 
-    if(users[socket.id] != data.username) {
+    if(users[socket.id] != data.username && await isUsernameValid(username)) {
       socket.emit('message rejected', { message: `Usernames aren't the same.` });
       return;
     } 
